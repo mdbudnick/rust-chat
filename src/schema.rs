@@ -1,3 +1,5 @@
+use crate::diesel;
+
 diesel::table! {
     conversations (id) {
         id -> Text,
@@ -20,7 +22,6 @@ diesel::table! {
     users (id) {
         id -> Text,
         username -> Text,
-        phone -> Text,
         created_at -> Text,
     }
 }

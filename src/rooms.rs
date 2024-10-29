@@ -1,6 +1,6 @@
 use actix_web::{get, web, HttpResponse};
 use serde_json::json;
-use crate::routes::DbPool;
+use crate::{db, routes::DbPool};
 use uuid::Uuid;
 
 #[get("/conversations/{uid}")]
