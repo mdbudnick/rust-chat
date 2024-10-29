@@ -62,6 +62,9 @@ impl ChatServer {
         }
     }
 }
+impl Actor for ChatServer {
+    type Context = Context<Self>;
+}
 impl Handler<Connect> for ChatServer {
     type Result = usize;
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
@@ -96,5 +99,38 @@ impl Handler<Disconnect> for ChatServer {
                 "chat_type": session::ChatType::DISCONNECT
             }).to_string(), 0);
         }
+    }
+}
+impl Handler<ListRooms> for ChatServer {
+    type Result = MessageResult<ListRooms>;
+    fn handle(&mut self, _: ListRooms, _: &mut Self::Context) -> Self::Result {
+        let mut rooms = vec![];
+        for key in self.rooms.keys() {
+            rooms.push(key.to_owned());
+        }
+        MessageResult(rooms)
+    }
+}
+impl Handler<Join> for ChatServer {
+    type Result = ();
+    fn handle(&mut self, msg: Join, _: &mut Self::Context) -> Self::Result {
+        let Join {id, name} = msg;
+        let mut rooms = vec![];
+        for (n, sessions) in &mut self.rooms {
+            if sessions.remove(&id) {
+                rooms.push(n.to_owned());
+            }
+        }
+        for room in rooms {
+            self.send_message(&room, &json!({
+                "room": room,
+                "value": vec![format!("Someone disconnect!")],
+                "chat_type": session::ChatType::DISCONNECT
+            }).to_string(), 0);
+        }
+        self.rooms
+            .entry(name.clone())
+            .or_insert_with(HashSet::new)
+            .insert(id);
     }
 }
