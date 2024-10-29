@@ -33,3 +33,32 @@ pub struct Join {
     pub id: usize,
     pub name: String,
 }
+
+#[derive(Debug)]
+pub struct ChatServer {
+    sessions: HashMap<usize, Recipient<Message>>,
+    rooms: HashMap<String, HashSet<usize>>,
+    rng: ThreadRng,
+}
+impl ChatServer {
+    pub fn new() -> ChatServer {
+        let mut rooms = HashMap::new();
+        rooms.insert("main".to_string(), HashSet::new());
+        Self {
+            sessions: HashMap::new(),
+            rooms,
+            rng: rand::thread_rng()
+        }
+    }
+    fn send_message(&self, room: &str, message: &str, skip_id: usize) {
+        if let Some(sessions) = self.rooms.get(room) {
+            for id in sessions {
+                if *id != skip_id {
+                    if let Some(addr) = self.sessions.get(id) {
+                        addr.do_send(Message(message.to_owned()));
+                    }
+                }
+            }
+        }
+    }
+}
