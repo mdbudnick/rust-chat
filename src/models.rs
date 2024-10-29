@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
+use serde_json::{Deserialize, Serialize};
 use diesel::{Queryable, Insertable};
-use crate::{schema::*, server::Message};
+use crate::schema::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Insertable)]
 #[diesel(table_name = users)]

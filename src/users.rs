@@ -2,6 +2,7 @@ use actix_web::{get, http::Error, post, web, HttpResponse};
 use crate::models;
 use serde_json::json;
 use crate::routes::DbPool;
+use crate::db;
 use uuid::Uuid;
 
 #[post("/users/create")]
@@ -13,9 +14,21 @@ pub async fn create_user(
         let mut conn = pool.get()?;
         db::insert_new_user(&mut conn, &form.username)
     })
-    .await?
-    .map_err(actix_web::error::ErrorUnprocessableEntity)?;
-    Ok(HttpResponse::Ok().json(user))
+    .await
+    .map_err(|e| {
+        eprintln!("Error creating user: {:?}", e);
+        actix_web::error::ErrorInternalServerError("Error creating user")
+    });
+
+    match user {
+        Ok(user) => Ok(HttpResponse::Ok().json(user)),
+        Err(e) => {
+            eprintln!("Database error: {:?}", e);
+            Ok(HttpResponse::UnprocessableEntity().json(serde_json::json!({
+                "error": "Could not create user"
+            })))
+        }
+    }
 }
 
 #[get("/users/{user_id}")]

@@ -14,7 +14,7 @@ fn iso_date() -> String {
     return now.to_rfc3339();
 }
 
-pub fn insert_new_user(conn: &mut SqliteConnection, nm: &str, _pn: &str) -> Result<User, DbError> {
+pub fn insert_new_user(conn: &mut SqliteConnection, nm: &str) -> Result<User, DbError> {
     use crate::schema::users::dsl::*;
     let new_user = User {
         id: Uuid::new_v4().to_string(),
