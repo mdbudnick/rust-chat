@@ -132,3 +132,5 @@ target/
 Cargo.lock
 **/*.rs.bk
 *.pdb
+
+chat.db
