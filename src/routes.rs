@@ -13,7 +13,8 @@ use crate::db;
 use crate::models;
 use crate::server;
 use crate::session;
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+
+pub(crate) type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 pub async fn index() -> impl Responder {
     NamedFile::open_async("./static/index.html").await.unwrap()
