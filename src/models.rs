@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use diesel::{Queryable, Insertable};
-use crate::schema::*;
+use crate::{schema::*, server::Message};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Insertable)]
 #[diesel(table_name = users)]
@@ -41,4 +41,5 @@ pub struct NewConversation {
 pub struct RoomResponse {
     pub room: Room,
     pub users: Vec<User>,
+    pub messages: Vec<Conversation>,
 }

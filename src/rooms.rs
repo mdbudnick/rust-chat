@@ -11,7 +11,7 @@ pub async fn get_conversation_by_id(
     let room_id = uid.to_owned();
     let conversations = web::block(move || {
         let mut conn = pool.get()?;
-        db::get_conversation_by_room_uid(&mut conn, room_id)
+        db::get_conversation_by_room_uid(&mut conn, &room_id.to_string())
     })
     .await?
     .map_err(actix_web::error::ErrorInternalServerError)?;
