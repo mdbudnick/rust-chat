@@ -8,9 +8,10 @@ actix = "0.13.0"
 actix-files = "0.6.2"
 actix-web = "4.2.1"
 actix-web-actors = "4.1.0"
+chrono = "0.4.38"
 diesel = { version = "2.2.4", features = ["sqlite", "chrono", "r2d2", "serde_json"] }
 diesel_cli_ext = "0.3.0"
 rand = "0.8.5"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.88"
-uuid = "1.11.0"
+uuid = {version = "1.11.0", features = [ "v4" ] }
