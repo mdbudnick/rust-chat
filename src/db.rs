@@ -24,3 +24,21 @@ pub fn insert_new_user(conn: &mut SqliteConnection, nm: &str, pn: &str) -> Resul
     diesel::insert_into(users).values(&new_user).execute(conn)?;
     Ok(new_user)
 }
+
+pub fn insert_new_conversation(
+    conn: &mut SqliteConnection,
+    new: NewConversation,
+) -> Result<Conversation, DbError> {
+    use crate::schema::conversations::dsl::*;
+    let new_conversation = Conversation {
+        id: Uuid::new_v4().to_string(),
+        user_id: new.user_id,
+        room_id: new.room_id,
+        content: new.message,
+        created_at: iso_date(),
+    };
+    diesel::insert_into(conversations)
+        .values(&new_conversation)
+        .execute(conn)?;
+    Ok(new_conversation)
+}
