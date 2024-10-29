@@ -13,6 +13,8 @@ mod routes;
 mod schema;
 mod server;
 mod session;
+mod users;
+mod rooms;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let server = server::ChatServer::new().start();
@@ -35,11 +37,10 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .service(web::resource("/").to(routes::index))
             .route("/ws", web::get().to(routes::chat_server))
-            .service(routes::create_user)
-            .service(routes::get_user_by_id)
-            .service(routes::get_user_by_phone)
-            .service(routes::get_conversation_by_id)
-            .service(routes::get_rooms)
+            .service(users::create_user)
+            .service(users::get_user_by_id)
+            .service(rooms::get_conversation_by_id)
+            .service(rooms::get_rooms)
             .service(Files::new("/", "./static"))
     })
     .workers(2)
