@@ -3,14 +3,14 @@ use diesel::{Queryable, Insertable};
 use crate::schema::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Insertable)]
-#[table_name = "users"]
+#[diesel(table_name = users)]
 pub struct User {
     pub id: String,
     pub username: String,
     pub created_at: String
 }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Queryable, Insertable)]
-#[table_name = "conversations"]
+#[diesel(table_name = conversations)]
 pub struct Conversation {
     pub id: String,
     pub room_id: String,
@@ -19,7 +19,7 @@ pub struct Conversation {
     pub created_at: String
 }
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Insertable)]
-#[table_name = "rooms"]
+#[diesel(table_name = rooms)]
 pub struct Room {
     pub id: String,
     pub name: String,
