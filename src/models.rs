@@ -1,4 +1,4 @@
-use serde_json::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use diesel::{Queryable, Insertable};
 use crate::schema::*;
 

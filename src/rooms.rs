@@ -1,4 +1,4 @@
-use actix_web::{get, web, HttpResponse};
+use actix_web::{get, web, Error, HttpResponse};
 use serde_json::json;
 use crate::{db, routes::DbPool};
 use uuid::Uuid;

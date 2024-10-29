@@ -5,31 +5,37 @@ use crate::routes::DbPool;
 use crate::db;
 use uuid::Uuid;
 
+
 #[post("/users/create")]
 pub async fn create_user(
     pool: web::Data<DbPool>,
     form: web::Json<models::NewUser>,
 ) -> Result<HttpResponse, Error> {
-    let user = web::block(move || {
+    let user_result = web::block(move || {
         let mut conn = pool.get()?;
         db::insert_new_user(&mut conn, &form.username)
     })
-    .await
-    .map_err(|e| {
-        eprintln!("Error creating user: {:?}", e);
-        actix_web::error::ErrorInternalServerError("Error creating user")
-    });
+    .await;
 
-    match user {
-        Ok(user) => Ok(HttpResponse::Ok().json(user)),
-        Err(e) => {
+    match user_result {
+        Ok(Ok(user)) => Ok(HttpResponse::Ok().json(user)),
+        Ok(Err(e)) => {
             eprintln!("Database error: {:?}", e);
-            Ok(HttpResponse::UnprocessableEntity().json(serde_json::json!({
-                "error": "Could not create user"
+            Ok(HttpResponse::UnprocessableEntity().json(json!({
+                "error": "Could not create user",
+                "message": e.to_string()
+            })))
+        },
+        Err(e) => {
+            eprintln!("Blocking error: {:?}", e);
+            Ok(HttpResponse::InternalServerError().json(json!({
+                "error": "Internal Server Error",
+                "message": "An unexpected error occurred"
             })))
         }
     }
 }
+
 
 #[get("/users/{user_id}")]
 pub async fn get_user_by_id(
