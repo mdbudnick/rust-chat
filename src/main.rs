@@ -7,6 +7,7 @@ use diesel::{
     prelude::*,
     r2d2::{self, ConnectionManager},
 };
+extern crate diesel-cli;
 mod db;
 mod models;
 mod routes;
