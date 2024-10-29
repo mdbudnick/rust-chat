@@ -1,4 +1,4 @@
-use crate::diesel;
+use diesel;
 
 diesel::table! {
     conversations (id) {
